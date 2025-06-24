@@ -1,3 +1,10 @@
+
+:root
+{
+    --main-hue: #d9a6a6;
+    --rogal-hue: rgba(222, 149, 22, 1);
+    --kisiel-hue: #523ab4;
+}
 body
 {
     margin:0;
@@ -6,8 +13,8 @@ body
 }
 #head
 {
-    background: #523ab4;
-    background: linear-gradient(135deg,rgba(82, 58, 180, 1) 12%, rgba(222, 149, 22, 1) 91%);
+    background: var(--kisiel-hue);
+    background: linear-gradient(135deg,var(--kisiel-hue) 12%, var(--rogal-hue) 91%);
     width:100%;
     margin:0 auto;
     text-align: center;
@@ -26,12 +33,17 @@ body
     font-family: "Bebas Neue", sans-serif;
     font-size: 2.9vh;
     font-weight: 100;
-    color: #d9a6a6;
+    color: var(--main-hue);
 }
 #searchbar
 {
     margin:auto;
-    display:flex;
+    display:flex;.autor a
+{
+    text-decoration: none;
+    
+
+}
     align-items: center;
     justify-content: center;
     width:60%;
@@ -64,28 +76,82 @@ body
 #searchbar button:hover
 {
     cursor:pointer;
-    border-color:#d9a6a6;
+    border-color:var(--main-hue);
 }
 #searchbar input:hover
 {
-    border-color:#d9a6a6;
+    border-color:var(--main-hue);
 }
 #searchbar input:focus 
 {
-  border: 2px solid #d9a6a6;
-  outline: 0
+  border: 2px solid var(--main-hue);
+  outline: 0;
 }
 #main
 {
     width:80%;
     margin:10vh auto;
 }
-
+#results
+{
+    margin-top: 10vh;
+}
 .resultDisabled
 {
 
 }
 .result
 {
-    
+    width: 80%;
+    background-color: #4b4040;
+    margin-bottom: 2vh;
+    margin: 0 auto 4vh auto;
+    padding: 3vh;
+    border-radius: 5vw 2vw;
+    border-bottom: 2px solid var(--main-hue);
+}
+.name
+{
+    margin:auto;
+    width: fit-content;
+    color: white;
+    font-size: 4vh;
+    text-align: center;
+    font-family: Bebas Neue;
+    border-bottom: var(--main-hue) 1px dashed;
+}
+.odcinki
+{
+    color: var(--main-hue);
+    margin: auto;
+    text-align: center;
+    margin-top: 1.5vh;
+
+}
+.autor
+{
+    margin-bottom: -2vh;
+}
+a
+{
+    text-decoration: none;
+}
+a:link 
+{
+  color: var(--rogal-hue);
+}
+
+a:visited 
+{
+  color: rgb(128, 87, 17);;
+}
+
+a:hover 
+{
+  color: rgb(241, 188, 95);;
+}
+
+a:active 
+{
+  color: rgb(255, 255, 255);
 }

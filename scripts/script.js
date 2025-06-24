@@ -29,9 +29,9 @@ async function search() {
     for (let i=0; i<len; i++)
     {
         let episodes = [];
-        let test = data[i].episodes;
-        let testLen = test.length;
+        let test = data[i].episodes.sort(function(a, b){return a-b});
         test.push(0);
+        let testLen = test.length;
         let first = test[0];	
         for (let i=0;i<testLen; i++ )
         {
@@ -46,15 +46,14 @@ async function search() {
                                     
                 }
         }	
+        console.log(episodes);
         episodes = episodes.join(", ");
-        inside += `<div class='resultDisabled'>
+        inside += `<div class='result'>
                     <div class='name'>${data[i].title}</div>
-                    <div class='odcinki'>${episodes}</div>
+                    <div class='odcinki'>Dostępne odcinki: ${episodes}</div>
                     <div class='autor'>Autor: <a href='http://animesub.info/osoba.php?id=${data[i].author_id}'>${data[i].author}</a></div>
                 </div>`
     }
     document.getElementById('results').innerHTML = inside;
-    console.log(inside);
-    console.log(data);
         
 }
