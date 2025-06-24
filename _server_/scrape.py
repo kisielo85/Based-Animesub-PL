@@ -19,21 +19,11 @@ def result_processing(lock, results, link):
             continue
 
         sub_id = sub_id['value']
-        title = s.find('td').get_text()
         author_id = s.find('a')['href'][13:]
-        key = title + "_" + author_id
-
-        # sprawdzanie czy warto dalej zbierać dane
-        NEW_KEY = key not in results
-        NEW_ID = not NEW_KEY and any(
-            sr['id'] == sub_id for sr in results[key]['sub_results']
-        )
-        if not (NEW_KEY or NEW_ID):
-            continue
-
         author_txt = s.find('a').get_text()[1:]
-        date = datetime.strptime(s.find_all('td')[1].get_text(), "%Y.%m.%d")
+        title = s.find('td').get_text()
         title_en = s.find_all('tr')[1].find('td').get_text()
+        date = datetime.strptime(s.find_all('td')[1].get_text(), "%Y.%m.%d")
         episodes = []
 
         # jeśli to serial a nie film
@@ -51,10 +41,11 @@ def result_processing(lock, results, link):
                     episodes.append(i)
             else:
                 episodes = [int(episode)]
-
+        
+        key = title + "_" + author_id
         # lock żeby wątki nie zapisywały w tym samym czasie
         with lock:
-            if NEW_KEY:
+            if key not in results:
                 results[key] = {
                     'sub_results': [],
                     'title': title,
@@ -62,7 +53,7 @@ def result_processing(lock, results, link):
                     'author_id': author_id,
                     'author_txt': author_txt,
                 }
-            if NEW_ID:
+            if not any(sr['id'] == sub_id for sr in results[key]['sub_results']):
                 results[key]['sub_results'].append(
                     {
                         'id': sub_id,
