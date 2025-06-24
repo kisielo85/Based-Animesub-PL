@@ -20,7 +20,7 @@ function search() {
     fetch(`${api_link}/search`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ title: "steins gate" })
+        body: JSON.stringify({ title: anime })
     }).then(res => res.json())         // parsuj JSON
         .then(data => {
             console.log(data);
