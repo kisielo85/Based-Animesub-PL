@@ -50,12 +50,12 @@ function search() {
                 episodes = episodes.join(", ");
                 inside += `<div class='resultDisabled'>
                     <div class='name'>${data[i].title}</div>
-                    <div class='odcinki'>${odcinki}</div>
+                    <div class='odcinki'>${episodes}</div>
                     <div class='autor'>Autor: <a href='http://animesub.info/osoba.php?id=${data.author_id}'>${data.author}</a></div>
                 </div>`
             }
             document.getElementById('results').innerHTML = inside;
             console.log(inside);
-            console.log(data);
+            console.log(data, "eee");
         })
 }
