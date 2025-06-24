@@ -15,7 +15,7 @@ const api_link = "https://basedanimesub.153070065.xyz"
 
 
 function search() {
-    anime = document.getElementById("anime").value;
+    let anime = document.getElementById("anime").value;
     console.log(anime)
     fetch(`${api_link}/search`, {
         method: "POST",
@@ -23,6 +23,38 @@ function search() {
         body: JSON.stringify({ title: (anime.toString()) })
     }).then(res => res.json())         // parsuj JSON
         .then(data => {
+
+            let len = data.length;
+            let inside = "";
+            for (let i=0; i<len; i++)
+            {
+                let episodes = [];
+                
+                let test = data.episodes;
+                let testLen = test.length;
+                test.push(0);
+                let first = test[0];	
+                for (let i=0;i<testLen; i++ )
+                {
+                    if (i>0)
+                        if (test[i] != test[i-1]+1)
+                        {
+                            if (test[i-1]!=first)
+                                episodes.push(`${first}-${test[i-1]}`);				
+                            else
+                                episodes.push(`${first}`);
+                            first = test[i];	
+                                    
+                        }
+                }	
+                episodes = episodes.join(", ");
+                inside += `<div class='resultDisabled'>
+                    <div class='name'>${data[i].title}</div>
+                    <div class='odcinki'>${odcinki}</div>
+                    <div class='autor'>Autor: <a href='http://animesub.info/osoba.php?id=${data.author_id}'>${data.author}</a></div>
+                </div>`
+            }
+            document.getElementById('results').innerHTML = inside;
             console.log(data);
         })
 }
