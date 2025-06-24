@@ -1,4 +1,82 @@
+body
+{
+    margin:0;
+    background-color: #222;
+    font-family:'Quicksand', sans-serif;
+}
+#head
+{
+    background: #523ab4;
+    background: linear-gradient(135deg,rgba(82, 58, 180, 1) 12%, rgba(222, 149, 22, 1) 91%);
+    width:100%;
+    margin:0 auto;
+    text-align: center;
+    color: white;
+    padding: 4vh 0;
+    border-bottom: dashed 2px rgb(182, 182, 182);
+}
+#headPart1
+{
+    font-size: 5vh;
+    font-family: "Caprasimo", sans-serif;
+    font-weight: 900;
+}
+#headPart2
+{
+    font-family: "Bebas Neue", sans-serif;
+    font-size: 2.9vh;
+    font-weight: 100;
+    color: #d9a6a6;
+}
+#searchbar
+{
+    margin:auto;
+    display:flex;
+    align-items: center;
+    justify-content: center;
+    width:60%;
+}
+#searchbar input
+{
+    border: 2px solid #161616;
+    background-color: #38332e;
+    width: 30vw;
+    height:50px;
+    color:white;
+    font-size: large;
+    font-family:'Quicksand', sans-serif;
+    padding-left: 1vw;
+    border-radius: 0.7vw 0 0 0.7vw;
+    outline:none;
+    transition: all 0.2s ease-in-out;
+    box-sizing: border-box;
+    
+}
+#searchbar button
+{
+    border: 2px solid #161616;
+    background-color: #524a42;
+    border-radius: 0 0.7vw 0.7vw 0;
+    height:50px;
+    width: 50px;
+    transition: all 0.2s ease-in-out;
+}
+#searchbar button:hover
+{
+    cursor:pointer;
+    border-color:#d9a6a6;
+}
+#searchbar input:hover
+{
+    border-color:#d9a6a6;
+}
+#searchbar input:focus 
+{
+  border: 2px solid #d9a6a6;
+  outline: 0
+}
 #main
 {
-    background-color: #222;
+    width:80%;
+    margin:10vh auto;
 }

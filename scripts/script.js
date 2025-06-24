@@ -15,6 +15,8 @@ const api_link = "https://basedanimesub.153070065.xyz"
 
 
 function search() {
+    anime = document.getElementsByName("anime")[0].value;
+    console.log(anime)
     fetch(`${api_link}/search`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
