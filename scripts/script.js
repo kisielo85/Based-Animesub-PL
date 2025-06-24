@@ -56,6 +56,6 @@ function search() {
             }
             document.getElementById('results').innerHTML = inside;
             console.log(inside);
-            console.log(data, "eee");
+            console.log(data);
         })
 }
