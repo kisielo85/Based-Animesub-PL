@@ -1,17 +1,34 @@
 const api_link = "https://basedanimesub.153070065.xyz"
 
-/*function download(){
-    fetch(`${api_link}/download`)
-    .then(res => res.blob())
-    .then(blob => {
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = "plik.zip";
-        a.click();
-        URL.revokeObjectURL(url);
-    });
-}*/
+function download(ids) {
+    console.log("download:", data)
+
+    fetch(`${api_link}/download`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ sub_ids: ids })
+    })
+        .then(async res => {
+            let filename = "plik_BasedAnimesubInfo.zip"; // fallback
+
+            // nazwa pliku z headerów
+            const disposition = res.headers.get("Content-Disposition");
+            if (disposition && disposition.includes("filename=")) {
+                const match = disposition.match(/filename="?([^"]+)"?/);
+                if (match)
+                    filename = match[1];
+            }
+
+            // pobieranie .zip
+            const blob = await res.blob();
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            a.click();
+            URL.revokeObjectURL(url);
+        });
+}
 
 
 async function search() {

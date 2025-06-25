@@ -1,3 +1,2 @@
-# odkomentować jak test.zip przestanie być używany
-#/_server_/cache/* 
+/_server_/cache
 *.pyc

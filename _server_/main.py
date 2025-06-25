@@ -10,16 +10,6 @@ class handler(BaseHTTPRequestHandler):
         self.send_header('Access-Control-Allow-Headers', 'Content-Type')
         self.end_headers()
 
-    def do_GET(self):
-        if self.path == "/download":
-            with open("cache/test.zip", "rb") as f:
-                content = f.read()
-
-            self.send_response(200)
-            self.send_header('Content-Disposition', 'attachment; filename="file.zip"')
-            self._set_headers()
-            self.wfile.write(content)
-
     def do_POST(self):
         match self.path:
             case "/search":
@@ -38,6 +28,34 @@ class handler(BaseHTTPRequestHandler):
                 self._set_headers()
                 response = json.dumps(scrape.search(title))
                 self.wfile.write(response.encode('utf-8'))
+            case "/download":
+                content_length = int(self.headers.get('Content-Length', 0))
+                body = self.rfile.read(content_length)
+
+                try:
+                    data = json.loads(body)
+                    sub_ids = data.get("sub_ids")
+                except:
+                    self.send_response(400)
+                    self._set_headers()
+                    return
+
+                ouput_path, ouput_name = scrape.download(sub_ids)
+                if not ouput_path:
+                    self.send_response(400)
+                    self._set_headers()
+                    return
+
+                with open(ouput_path, "rb") as f:
+                    content = f.read()
+                self.send_response(200)
+                self.send_header('Content-Type', 'application/zip')
+                self.send_header('Access-Control-Expose-Headers', 'Content-Disposition')
+                self.send_header(
+                    'Content-Disposition', 'attachment; filename="' + ouput_name + '"'
+                )
+                self._set_headers()
+                self.wfile.write(content)
 
     def do_OPTIONS(self):
         self.send_response(200)

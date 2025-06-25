@@ -4,6 +4,10 @@ import re
 from datetime import datetime
 import threading
 from difflib import SequenceMatcher
+import os
+import zipfile
+import py7zr
+from time import sleep
 
 
 def result_processing(lock, results, link):
@@ -67,6 +71,7 @@ def result_processing(lock, results, link):
     return True
 
 
+# szukanie napisów z animesub.info
 def search(txt):
     txt = txt.replace(" ", "+")
     lock = threading.Lock()
@@ -122,3 +127,73 @@ def search(txt):
     )
 
     return batches
+
+
+# pobieranie danych napisów
+def download(ids):
+    print("GUSS", ids)
+    path = './cache/' + '_'.join(str(i) for i in ids)
+    os.makedirs(path + '/result', exist_ok=True)
+    output_name = ""
+
+    for id in ids:
+        # jeśli nie uda sie pobrać, to próbuje jeszcze kilka razy
+        for i in range(5):
+            try:
+                response = requests.post(
+                    'http://animesub.info/sciagnij.php', data={'id': id}
+                )
+                if response.ok:
+                    break
+            finally:
+                if i >= 4:
+                    return (False,False)
+                sleep(1)
+
+        # zapis pobranego zip
+        filename = f'{path}/{id}.zip'
+        with open(filename, 'wb') as f:
+            f.write(response.content)
+
+        # rozpakowywanie
+        zip_mode = response.content[:2]
+        match (zip_mode):
+            case b'PK':  # zip
+                with zipfile.ZipFile(filename, 'r') as archive:
+                    archive.extractall(path)
+            case b'7z':  # 7zip
+                with py7zr.SevenZipFile(filename, mode='r') as archive:
+                    archive.extractall(path)
+            case '_':
+                print("nie można wypakować pliku")
+                return (False,False)
+
+        # nazwa zipa z wynikiem
+        if output_name == "":
+            output_name = "plik_BasedAnimesubInfo.zip"  # fallback
+
+            # domyślna nazwa pobranego pliku
+            content_disposition = response.headers.get('Content-Disposition')
+            if not content_disposition:
+                continue
+            match = re.search(r'filename="?([^"]+)"?', content_disposition)
+            if not match:
+                continue
+
+            # usunięcie _ep**_ i dodanie Based
+            output_name = match.group(1)
+            output_name = re.sub(r'_ep\d+(_\d+)?_', '_', output_name)
+            output_name = output_name.replace('_AnimeSubInfo_id', '_BasedAnimeSubInfo_')
+
+    output_path = f'{path}/result/{output_name}'
+    # pakowanie wszystkich napisów do jednego pliku
+    with zipfile.ZipFile(output_path, 'w', zipfile.ZIP_DEFLATED) as zipf:
+        for file in os.listdir(path):
+            if file.lower().endswith(('.zip', '.7z')):
+                continue
+
+            file_path = os.path.join(path, file)
+            if os.path.isfile(file_path):
+                zipf.write(file_path, file)
+
+    return (output_path, output_name)
