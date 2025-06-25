@@ -3,6 +3,7 @@ from bs4 import BeautifulSoup
 import re
 from datetime import datetime
 import threading
+from difflib import SequenceMatcher
 
 
 def result_processing(lock, results, link):
@@ -41,7 +42,7 @@ def result_processing(lock, results, link):
                     episodes.append(i)
             else:
                 episodes = [int(episode)]
-        
+
         key = title + "_" + author_id
         # lock żeby wątki nie zapisywały w tym samym czasie
         with lock:
@@ -92,17 +93,30 @@ def search(txt):
         r = results[key]
         r['sub_results'] = sorted(r['sub_results'], key=lambda x: x['date'])
 
-        batch = {'episodes': [], 'sub_ids': []}
+        batch = {'episodes': [], 'sub_ids': [], 'date': datetime(1, 1, 1)}
 
         for sub in r['sub_results']:
             # jeśli odc sie pokrywają -> nowy batch
             if not set(batch['episodes']).isdisjoint(sub['episodes']):
                 batches.append(add_info(batch, r))
-                batch = {'episodes': [], 'sub_ids': []}
+                batch = {'episodes': [], 'sub_ids': [], 'date': datetime(1, 1, 1)}
 
+            if sub['date'] > batch['date']:
+                batch['date'] = sub['date']
             batch['episodes'] += sub['episodes']
             batch['sub_ids'].append(sub['id'])
 
         batches.append(add_info(batch, r))
+
+    batches = sorted(
+        batches,
+        reverse=True,
+        key=lambda x: (
+            SequenceMatcher(None, txt, x['title']).ratio()
+            + SequenceMatcher(None, txt, x['title_en']).ratio(),
+            len(x['episodes']),
+            x['date'],
+        ),
+    )
 
     return batches
