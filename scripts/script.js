@@ -80,10 +80,12 @@ async function search() {
     // wczytanie do html
     document.getElementById('results').innerHTML = inside;
     requestAnimationFrame(() => {
-        let elements = document.querySelectorAll(".resultDisabled");
-        elements.forEach((element) => {
-            element.classList.add("result")
-            element.classList.remove("resultDisabled")
+        requestAnimationFrame(() => {
+            let elements = document.querySelectorAll(".resultDisabled");
+            elements.forEach((element) => {
+                element.classList.add("result")
+                element.classList.remove("resultDisabled")
+            });
         });
     });
 }
