@@ -24,9 +24,11 @@ body
 }
 #head
 {
+    z-index: 1;
     background: var(--kisiel-hue);
     background: linear-gradient(135deg,var(--kisiel-hue) 12%, var(--rogal-hue) 91%);
-    
+    position: sticky;
+    top:-13vh; 
     width:100%;
     margin:0 auto;
     text-align: center;
@@ -49,21 +51,18 @@ body
 }
 #searchbar
 {
-    margin:auto;
-    display:flex;.autor a
-{
-    text-decoration: none;
-    
-
-}
+    top:0;
+    position:sticky;
+    margin: 2vw auto  auto;
+    display:flex;
     align-items: center;
     justify-content: center;
     width:60%;
 }
 #searchbar input
 {
-    border: 2px solid #161616;
-    background-color: #38332e;
+    border: 2px solid #3f3f3f;
+    background-color: #524a42;
     width: 30vw;
     height:50px;
     color:white;
@@ -78,8 +77,8 @@ body
 }
 #searchbar button
 {
-    border: 2px solid #161616;
-    background-color: #524a42;
+    border: 2px solid #3f3f3f;
+    background-color: #756c63;
     border-radius: 0 0.7vw 0.7vw 0;
     height:50px;
     width: 50px;
@@ -110,10 +109,18 @@ body
 }
 .resultDisabled
 {
-
+    font-size: 0;
+    margin: 0;
+    opacity: 0;
+    padding: 0;
+    transition: opacity .25s, font-size .5s .25s, margin .5s .25s, padding .5s .25s;
 }
 .result
 {
+    opacity: 100;
+    transition: 0.5s all ease-in-out;
+    z-index: 0;
+    position:relative;
     width: 80%;
     background-color: #4b4040;
     --s: 25px;
@@ -129,8 +136,7 @@ body
         var(--g3) var(--s) 0,var(--g3) 0 calc(1.73*var(--s)) 
         var(--c2);
     background-size: calc(2*var(--s)) calc(3.46*var(--s));
-    margin-bottom: 2vh;
-    margin: 0 auto 4vh auto;
+    margin: 0 auto 1vh auto;
     padding: 3vh;
     border-radius: 5vw 2vw;
     border-bottom: 2px solid var(--main-hue);
@@ -156,7 +162,7 @@ body
 .autor
 {
     margin-bottom: -2vh;
-    color:#111111
+    color:#c4c4c4
 }
 a
 {
@@ -191,7 +197,6 @@ a:active
 {
     text-align: center;
     margin: auto;
-    font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
     font-weight: 400;
     font-size: small;
     color: #020202;
@@ -199,11 +204,57 @@ a:active
 .data
 {
     margin-left: auto;
-    color:#111111;
+    color:#c4c4c4;
     margin-right:3vw;
 }
 .bottomRow
 {
     display: flex;
     margin-bottom: -2vh;
+}
+.details
+{
+    text-align: justify;
+    text-justify: inter-word;
+    padding:3vh;
+}
+#footer
+{
+    width:100vw;
+    position:fixed;
+    bottom:0;
+    background-color: rgb(14, 14, 14);
+    padding: 1vh 0;
+    text-align: center;
+    color:white;
+    border-top:1px dashed rgb(48, 48, 48)
+}
+.down
+{
+    margin-top: 2vh;
+    margin-bottom: 1vh;
+    width:100%;
+}
+.down button
+{
+    
+    display:block;
+    margin: auto;
+    border: 2px solid #3f3f3f;
+    background-color: #524a42;
+    color: white;
+    font-size: medium;
+    font-family: 'Quicksand';
+    padding:1.3vh 5vh;
+    border-radius: 1vh ;
+}
+.down button:hover
+{
+    cursor:pointer;
+    border-color:var(--main-hue);
+}
+.down button:active
+{
+    cursor:pointer;
+    border-color:white;
 }

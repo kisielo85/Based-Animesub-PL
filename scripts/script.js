@@ -52,10 +52,11 @@ async function search() {
         else
             episodes="Film/OVA";
         
-        inside += `<div class='result'>
+        inside += `<div class='resultDisabled'>
                     <div class='name'>${data[i].title_en}</div>
                     <div class='subName'>${data[i].title}</div>
                     <div class='odcinki'>Dostępne odcinki: ${episodes}</div>
+                    <div class='down'><button onclick='download([${data[i].sub_ids}])'>Pobierz paczkę</button></div>
                     <div class='bottomRow'>
                         <div class='autor'>Autor: <a href='http://animesub.info/osoba.php?id=${data[i].author_id}'>${data[i].author}</a></div>
                         <div class='data'>${data[i].date}</div>
@@ -64,5 +65,13 @@ async function search() {
     }
     console.log(data);
     document.getElementById('results').innerHTML = inside;
-        
+    setTimeout(() => {
+        let elements = document.getElementsByClassName("resultDisabled");
+        let len = elements.length;
+        for (let i =0; i<len;i++)
+        {
+            elements[i].classList.add("result");
+            elements[i].classList.remove("resultDisabled");
+        }
+    }, 500) 
 }
