@@ -41,42 +41,50 @@ async function search() {
         body: JSON.stringify({ title: (anime.toString()) })
     })
     data = await data.json();
-
+    dataLen = data.length;
     let inside = "";
-    for (let i = 0; i < data.length; i++) {
-        let episodes = [];
-        let test = data[i].episodes.sort(function (a, b) { return a - b });
-        let testLen = test.length;
-        let first = test[0];
-        if (testLen > 0) {
-            // zmiana listy odc. na czytelne zakresy
-            for (let i = 1; i < testLen + 1; i++) {
-                if (test[i] != test[i - 1] + 1) {
-                    if (test[i - 1] != first)
-                        episodes.push(`${first}-${test[i - 1]}`);
-                    else
-                        episodes.push(`${first}`);
-                    first = test[i];
+    if (dataLen>0)
+        for (let i = 0; i < dataLen; i++) {
+            let episodes = [];
+            let test = data[i].episodes.sort(function (a, b) { return a - b });
+            let testLen = test.length;
+            let first = test[0];
+            if (testLen > 0) {
+                // zmiana listy odc. na czytelne zakresy
+                for (let i = 1; i < testLen + 1; i++) {
+                    if (test[i] != test[i - 1] + 1) {
+                        if (test[i - 1] != first)
+                            episodes.push(`${first}-${test[i - 1]}`);
+                        else
+                            episodes.push(`${first}`);
+                        first = test[i];
+                    }
                 }
+                episodes = episodes.join(", ");
             }
-            episodes = episodes.join(", ");
+            else
+                episodes = "Film/OVA";
+
+            inside +=
+                `<div class='resultDisabled'>
+                    <div class='name'>${data[i].title_en}</div>
+                    <div class='subName'>${data[i].title}</div>
+                    <div class='odcinki'>Dostępne odcinki: ${episodes}</div>
+                    <div class='down'><button onclick='download([${data[i].sub_ids}])'>Pobierz paczkę</button></div>
+                    <div class='bottomRow'>
+                        <div class='autor'>Autor: <a href='http://animesub.info/osoba.php?id=${data[i].author_id}'>${data[i].author}</a></div>
+                        <div class='data'>${data[i].date}</div>
+                    </div>
+                </div>`
         }
-        else
-            episodes = "Film/OVA";
-
+    else
+    {
         inside +=
-            `<div class='resultDisabled'>
-                <div class='name'>${data[i].title_en}</div>
-                <div class='subName'>${data[i].title}</div>
-                <div class='odcinki'>Dostępne odcinki: ${episodes}</div>
-                <div class='down'><button onclick='download([${data[i].sub_ids}])'>Pobierz paczkę</button></div>
-                <div class='bottomRow'>
-                    <div class='autor'>Autor: <a href='http://animesub.info/osoba.php?id=${data[i].author_id}'>${data[i].author}</a></div>
-                    <div class='data'>${data[i].date}</div>
-                </div>
-            </div>`
+                `<div class='resultDisabled'>
+                    <div class='name'>Nie znaleziono żadnego wyniku!</div>
+                    <div class='details'>Spróbuj wyszukać coś innego - użyj angielskich i japońskich nazw.</div>
+                </div>`
     }
-
     // wczytanie do html
     document.getElementById('results').innerHTML = inside;
     requestAnimationFrame(() => {
@@ -89,3 +97,10 @@ async function search() {
         });
     });
 }
+
+searchbar = document.getElementById("searchbar");
+
+searchbar.addEventListener("keypress", function(e){
+    if (e.code=="Enter")
+        search();
+})

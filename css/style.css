@@ -214,8 +214,7 @@ a:active
 }
 .details
 {
-    text-align: justify;
-    text-justify: inter-word;
+    text-align: center;
     padding:3vh;
 }
 #footer
