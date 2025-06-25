@@ -24,7 +24,9 @@ def result_processing(lock, results, link):
         author_txt = s.find('a').get_text()[1:]
         title = s.find('td').get_text()
         title_en = s.find_all('tr')[1].find('td').get_text()
-        date = datetime.strptime(s.find_all('td')[1].get_text(), "%Y.%m.%d")
+        date = datetime.strptime(s.find_all('td')[1].get_text(), "%Y.%m.%d").strftime(
+            "%Y-%m-%d"
+        )
         episodes = []
 
         # jeśli to serial a nie film
@@ -93,13 +95,13 @@ def search(txt):
         r = results[key]
         r['sub_results'] = sorted(r['sub_results'], key=lambda x: x['date'])
 
-        batch = {'episodes': [], 'sub_ids': [], 'date': datetime(1, 1, 1)}
+        batch = {'episodes': [], 'sub_ids': [], 'date': "0000-00-00"}
 
         for sub in r['sub_results']:
             # jeśli odc sie pokrywają -> nowy batch
             if not set(batch['episodes']).isdisjoint(sub['episodes']):
                 batches.append(add_info(batch, r))
-                batch = {'episodes': [], 'sub_ids': [], 'date': datetime(1, 1, 1)}
+                batch = {'episodes': [], 'sub_ids': [], 'date': "0000-00-00"}
 
             if sub['date'] > batch['date']:
                 batch['date'] = sub['date']
