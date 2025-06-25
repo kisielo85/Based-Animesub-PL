@@ -33,62 +33,58 @@ function download(ids) {
 
 async function search() {
     let anime = document.getElementById("anime").value;
-    console.log(anime)
+    console.log("search:", anime)
+
     data = await fetch(`${api_link}/search`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ title: (anime.toString()) })
     })
-    data = await data.json(); // parsuj JSON
-    let len = data.length;
+    data = await data.json();
+
     let inside = "";
-    for (let i=0; i<len; i++)
-    {
+    for (let i = 0; i < data.length; i++) {
         let episodes = [];
-        let test = data[i].episodes.sort(function(a, b){return a-b});
-        test.push(0);
+        let test = data[i].episodes.sort(function (a, b) { return a - b });
         let testLen = test.length;
         let first = test[0];
-        if (testLen>1)
-        {
-            for (let i=0;i<testLen; i++ )
-            {
-                if (i>0)
-                    if (test[i] != test[i-1]+1)
-                    {
-                        if (test[i-1]!=first)
-                            episodes.push(`${first}-${test[i-1]}`);				
-                        else
-                            episodes.push(`${first}`);
-                        first = test[i];	
-                                        
-                    }
-            }	
+        if (testLen > 0) {
+            // zmiana listy odc. na czytelne zakresy
+            for (let i = 1; i < testLen + 1; i++) {
+                if (test[i] != test[i - 1] + 1) {
+                    if (test[i - 1] != first)
+                        episodes.push(`${first}-${test[i - 1]}`);
+                    else
+                        episodes.push(`${first}`);
+                    first = test[i];
+                }
+            }
             episodes = episodes.join(", ");
-        }	
-        else
-            episodes="Film/OVA";
-        
-        inside += `<div class='resultDisabled'>
-                    <div class='name'>${data[i].title_en}</div>
-                    <div class='subName'>${data[i].title}</div>
-                    <div class='odcinki'>Dostępne odcinki: ${episodes}</div>
-                    <div class='down'><button onclick='download([${data[i].sub_ids}])'>Pobierz paczkę</button></div>
-                    <div class='bottomRow'>
-                        <div class='autor'>Autor: <a href='http://animesub.info/osoba.php?id=${data[i].author_id}'>${data[i].author}</a></div>
-                        <div class='data'>${data[i].date}</div>
-                    </div>
-                </div>`
-    }
-    console.log(data);
-    document.getElementById('results').innerHTML = inside;
-    setTimeout(() => {
-        let elements = document.getElementsByClassName("resultDisabled");
-        let len = elements.length;
-        for (let i =0; i<len;i++)
-        {
-            elements[i].classList.add("result");
-            elements[i].classList.remove("resultDisabled");
         }
-    }, 500) 
+        else
+            episodes = "Film/OVA";
+
+        inside +=
+            `<div class='resultDisabled'>
+                <div class='name'>${data[i].title_en}</div>
+                <div class='subName'>${data[i].title}</div>
+                <div class='odcinki'>Dostępne odcinki: ${episodes}</div>
+                <div class='down'><button onclick='download([${data[i].sub_ids}])'>Pobierz paczkę</button></div>
+                <div class='bottomRow'>
+                    <div class='autor'>Autor: <a href='http://animesub.info/osoba.php?id=${data[i].author_id}'>${data[i].author}</a></div>
+                    <div class='data'>${data[i].date}</div>
+                </div>
+            </div>`
+    }
+
+    // wczytanie do html
+    document.getElementById('results').innerHTML = inside;
+    requestAnimationFrame(() => {
+        let elements = document.querySelectorAll(".resultDisabled");
+        elements.forEach((element) => {
+            element.classList.add("result")
+            element.classList.remove("resultDisabled")
+        });
+    });
 }
+search("erased")
