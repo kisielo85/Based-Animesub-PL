@@ -5,16 +5,28 @@
     --rogal-hue: rgba(222, 149, 22, 1);
     --kisiel-hue: #523ab4;
 }
+
+html {
+    user-select: none;
+  --s: 93px;
+  --c1: #232323;
+  --c2: #222222;
+  
+  background: 
+    linear-gradient(atan(-.5),var(--c1) 33%,var(--c2) 33.5% 66.5%,var(--c1) 67%) 
+    0/var(--s) var(--s);
+}
+
 body
 {
     margin:0;
-    background-color: #222;
     font-family:'Quicksand', sans-serif;
 }
 #head
 {
     background: var(--kisiel-hue);
     background: linear-gradient(135deg,var(--kisiel-hue) 12%, var(--rogal-hue) 91%);
+    
     width:100%;
     margin:0 auto;
     text-align: center;
@@ -104,6 +116,19 @@ body
 {
     width: 80%;
     background-color: #4b4040;
+    --s: 25px;
+    --c1: #4c4141;
+    --c2: #4b4040;
+    --c:#0000,var(--c1) .5deg 119.5deg,#0000 120deg;
+    --g1:conic-gradient(from  60deg at 56.25% calc(425%/6),var(--c));
+    --g2:conic-gradient(from 180deg at 43.75% calc(425%/6),var(--c));
+    --g3:conic-gradient(from -60deg at 50%   calc(175%/12),var(--c));
+    background:
+        var(--g1),var(--g1) var(--s) calc(1.73*var(--s)),
+        var(--g2),var(--g2) var(--s) calc(1.73*var(--s)),
+        var(--g3) var(--s) 0,var(--g3) 0 calc(1.73*var(--s)) 
+        var(--c2);
+    background-size: calc(2*var(--s)) calc(3.46*var(--s));
     margin-bottom: 2vh;
     margin: 0 auto 4vh auto;
     padding: 3vh;
@@ -131,6 +156,7 @@ body
 .autor
 {
     margin-bottom: -2vh;
+    color:#111111
 }
 a
 {
@@ -143,7 +169,7 @@ a:link
 
 a:visited 
 {
-  color: rgb(128, 87, 17);;
+  color: rgb(134, 85, 0);
 }
 
 a:hover 
@@ -154,4 +180,30 @@ a:hover
 a:active 
 {
   color: rgb(255, 255, 255);
+}
+.main {
+  display:flex;
+  --s: 100px;  /* size  */
+  --m: 4px;    /* margin */
+  --f: calc(var(--s) * 1.732 + 4 * var(--m) - 1px); 
+}
+.subName
+{
+    text-align: center;
+    margin: auto;
+    font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+    font-weight: 400;
+    font-size: small;
+    color: #020202;
+}
+.data
+{
+    margin-left: auto;
+    color:#111111;
+    margin-right:3vw;
+}
+.bottomRow
+{
+    display: flex;
+    margin-bottom: -2vh;
 }
