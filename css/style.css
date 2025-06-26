@@ -214,7 +214,7 @@ a:active
 }
 .details
 {
-    text-align: center;
+    color: #ddd;
     padding:3vh;
 }
 #footer

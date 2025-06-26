@@ -31,7 +31,8 @@ function download(ids) {
 }
 
 
-async function search() {
+async function search(e) {
+    e.preventDefault();
     let anime = document.getElementById("anime").value;
     console.log("search:", anime)
 
@@ -43,7 +44,7 @@ async function search() {
     data = await data.json();
     dataLen = data.length;
     let inside = "";
-    if (dataLen>0)
+    if (dataLen > 0)
         for (let i = 0; i < dataLen; i++) {
             let episodes = [];
             let test = data[i].episodes.sort(function (a, b) { return a - b });
@@ -77,12 +78,11 @@ async function search() {
                     </div>
                 </div>`
         }
-    else
-    {
+    else {
         inside +=
-                `<div class='resultDisabled'>
+            `<div class='resultDisabled'>
                     <div class='name'>Nie znaleziono żadnego wyniku!</div>
-                    <div class='details'>Spróbuj wyszukać coś innego - użyj angielskich i japońskich nazw.</div>
+                    <div class='details'>Spróbuj wyszukać coś innego - użyj angielskich lub japońskich nazw.</div>
                 </div>`
     }
     // wczytanie do html
@@ -97,10 +97,3 @@ async function search() {
         });
     });
 }
-
-searchbar = document.getElementById("searchbar");
-
-searchbar.addEventListener("keypress", function(e){
-    if (e.code=="Enter")
-        search();
-})
