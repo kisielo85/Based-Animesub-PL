@@ -7,7 +7,6 @@
 }
 
 html {
-    user-select: none;
   --s: 93px;
   --c1: #232323;
   --c2: #222222;
@@ -24,6 +23,7 @@ body
 }
 #head
 {
+    user-select: none;
     z-index: 1;
     background: var(--kisiel-hue);
     background: linear-gradient(135deg,var(--kisiel-hue) 12%, var(--rogal-hue) 91%);
