@@ -1,1 +1,4 @@
+requests
+bs4
 py7zr
+html5lib

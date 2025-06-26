@@ -10,9 +10,10 @@ import py7zr
 from time import sleep
 
 
+# zbieranie danych z html
 def result_processing(lock, results, link):
     response = requests.get(link)
-    soup = BeautifulSoup(response.content, 'html.parser')
+    soup = BeautifulSoup(response.content, 'html5lib')
     data_segments = soup.find_all('table', class_='Napisy')
     if len(data_segments) <= 1:
         return False
@@ -30,6 +31,9 @@ def result_processing(lock, results, link):
         title_en = s.find_all('tr')[1].find('td').get_text()
         date = datetime.strptime(s.find_all('td')[1].get_text(), "%Y.%m.%d").strftime(
             "%Y-%m-%d"
+        )
+        description = (
+            s.find('tr', class_='KKom').find('td', class_='KNap').decode_contents()
         )
         episodes = []
 
@@ -66,8 +70,16 @@ def result_processing(lock, results, link):
                         'id': sub_id,
                         'episodes': episodes,
                         'date': date,
+                        'description': description,
                     }
                 )
+
+    # sortowanie po id
+    for key in results:
+        results[key]['sub_results'] = sorted(
+            results[key]['sub_results'], key=lambda x: x['id']
+        )
+
     return True
 
 
@@ -100,18 +112,29 @@ def search(txt):
         r = results[key]
         r['sub_results'] = sorted(r['sub_results'], key=lambda x: x['date'])
 
-        batch = {'episodes': [], 'sub_ids': [], 'date': "0000-00-00"}
+        batch = {
+            'episodes': [],
+            'sub_ids': [],
+            'descriptions': [],
+            'date': "0000-00-00",
+        }
 
         for sub in r['sub_results']:
             # jeśli odc sie pokrywają -> nowy batch
             if not set(batch['episodes']).isdisjoint(sub['episodes']):
                 batches.append(add_info(batch, r))
-                batch = {'episodes': [], 'sub_ids': [], 'date': "0000-00-00"}
+                batch = {
+                    'episodes': [],
+                    'sub_ids': [],
+                    'descriptions': [],
+                    'date': "0000-00-00",
+                }
 
             if sub['date'] > batch['date']:
                 batch['date'] = sub['date']
             batch['episodes'] += sub['episodes']
             batch['sub_ids'].append(sub['id'])
+            batch['descriptions'].append(sub['description'])
 
         batches.append(add_info(batch, r))
 
@@ -130,12 +153,13 @@ def search(txt):
 
 
 # pobieranie danych napisów
-def download(ids):
-    print("GUSS", ids)
+def download(ids, job):
     path = './cache/' + '_'.join(str(i) for i in ids)
     os.makedirs(path + '/result', exist_ok=True)
     output_name = ""
 
+    tasks = len(ids) + 1
+    done = 0
     for id in ids:
         # jeśli nie uda sie pobrać, to próbuje jeszcze kilka razy
         for i in range(5):
@@ -147,7 +171,7 @@ def download(ids):
                     break
             finally:
                 if i >= 4:
-                    return (False,False)
+                    return (False, False)
                 sleep(1)
 
         # zapis pobranego zip
@@ -166,7 +190,10 @@ def download(ids):
                     archive.extractall(path)
             case '_':
                 print("nie można wypakować pliku")
-                return (False,False)
+                return (False, False)
+
+        done += 1
+        job['progress'] = int(done / tasks * 100)
 
         # nazwa zipa z wynikiem
         if output_name == "":
@@ -196,4 +223,11 @@ def download(ids):
             if os.path.isfile(file_path):
                 zipf.write(file_path, file)
 
-    return (output_path, output_name)
+    job['progress'] = 100
+    job['result_path'] = output_path
+    job['result_name'] = output_name
+
+
+def start_download(ids, job):
+    t = threading.Thread(target=download, args=(ids, job))
+    t.start()

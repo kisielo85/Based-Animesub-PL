@@ -1,35 +1,60 @@
 const api_link = "https://basedanimesub.153070065.xyz"
+//const api_link = "http://localhost:8986"
 
-function download(ids) {
-    console.log("download:", data)
+const delay = ms => new Promise(res => setTimeout(res, ms));
 
-    fetch(`${api_link}/download`, {
+async function download(ids) {
+    // wysłanie id do pobrania, i odebranie job_id
+    data = await fetch(`${api_link}/download_start`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ sub_ids: ids })
     })
-        .then(async res => {
-            let filename = "plik_BasedAnimesubInfo.zip"; // fallback
+    data = await data.json()
+    const job_id = data['job_id']
 
-            // nazwa pliku z headerów
-            const disposition = res.headers.get("Content-Disposition");
-            if (disposition && disposition.includes("filename=")) {
-                const match = disposition.match(/filename="?([^"]+)"?/);
-                if (match)
-                    filename = match[1];
-            }
+    console.log("serwer odpowiedział, job_id:", job_id)
 
-            // pobieranie .zip
-            const blob = await res.blob();
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = filename;
-            a.click();
-            URL.revokeObjectURL(url);
-        });
+    // sprawdzanie postępu w tworzeniu .zip
+    progress = 0
+    while (progress < 100) {
+        data = await fetch(`${api_link}/download_progress`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ job_id: job_id })
+        })
+        data = await data.json()
+        progress = data['progress']
+        console.log("progress:", progress)
+        await delay(500)
+    }
+
+    // pobranie gotowego pliku
+    data = await fetch(`${api_link}/download`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ job_id: job_id })
+    })
+
+    let filename = "plik_BasedAnimesubInfo.zip"; // fallback
+
+    // nazwa pliku z headerów
+    const disposition = data.headers.get("Content-Disposition");
+    if (disposition && disposition.includes("filename=")) {
+        const match = disposition.match(/filename="?([^"]+)"?/);
+        if (match)
+            filename = match[1];
+    }
+
+    // pobieranie .zip
+    const blob = await data.blob();
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    a.click();
+    URL.revokeObjectURL(url);
 }
-
 
 async function search(e) {
     e.preventDefault();
@@ -42,6 +67,7 @@ async function search(e) {
         body: JSON.stringify({ title: (anime.toString()) })
     })
     data = await data.json();
+    console.log(data)
     dataLen = data.length;
     let inside = "";
     if (dataLen > 0)
@@ -81,9 +107,9 @@ async function search(e) {
     else {
         inside +=
             `<div class='resultDisabled'>
-                    <div class='name'>Nie znaleziono żadnego wyniku!</div>
-                    <div class='details'>Spróbuj wyszukać coś innego - użyj angielskich lub japońskich nazw.</div>
-                </div>`
+                <div class='name'>Nie znaleziono żadnego wyniku!</div>
+                <div class='details'>Spróbuj wyszukać coś innego - użyj angielskich lub japońskich nazw.</div>
+            </div>`
     }
     // wczytanie do html
     document.getElementById('results').innerHTML = inside;
