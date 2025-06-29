@@ -3,12 +3,14 @@ function loadResults(data) {
 
     if (data.length > 0) {
         data.forEach(d => {
+            let divId = d.sub_ids.join("-");
             inside +=
                 `<div class='resultDisabled'>
                     <div class='name'>${d.title_en}</div>
                     <div class='subName'>${d.title}</div>
                     <div class='odcinki'>${d.episodes_txt ? "Dostępne odcinki: " + d.episodes_txt : "Film/OVA"}</div>
                     <div class='down'><button onclick='download([${d.sub_ids}])'>Pobierz paczkę</button></div>
+                    <div class='progress-bar' name='${divId}-m'><div name='${divId}' class='inner-progres'></div></div>
                     <div class='bottomRow'>
                         <div class='autor'>Autor: <a href='http://animesub.info/osoba.php?id=${d.author_id}'>${d.author}</a></div>
                         <div class='data'>${d.date}</div>

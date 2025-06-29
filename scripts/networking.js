@@ -1,9 +1,33 @@
-const api_link = "https://basedanimesub.153070065.xyz"
-//const api_link = "http://localhost:8986"
+// const api_link = "https://basedanimesub.153070065.xyz"
+const api_link = "http://localhost:8986"
 
+var IDsMap = new Map();
 const delay = ms => new Promise(res => setTimeout(res, ms));
-
 var data_global=[]
+
+async function checkDownloadProgress(id)
+{
+    
+    progress = 0
+    divId = IDsMap.get(id).toString();
+    element =document.getElementsByName(divId)[0];
+    element2 =document.getElementsByName(`${divId}-m`)[0];
+    element.style.opacity = '100%';
+    element2.style.opacity = '100%';
+    while (progress < 100) {
+        data = await fetch(`${api_link}/download_progress`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ job_id: id })
+        })
+        data = await data.json()
+        progress = data['progress']
+        element.style.width= `${progress}%`;
+        await delay(500)
+    }
+    element.style.opacity = '0%';
+    element2.style.opacity = '0%';
+}
 
 async function download(ids) {
     // wysłanie id do pobrania, i odebranie job_id
@@ -11,25 +35,14 @@ async function download(ids) {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ sub_ids: ids })
-    })
-    data = await data.json()
-    const job_id = data['job_id']
-
-    console.log("serwer odpowiedział, job_id:", job_id)
+    });
+    data = await data.json();
+    const job_id = data['job_id'];
+    let id = ids.join("-");
+    IDsMap.set(job_id, id);
 
     // sprawdzanie postępu w tworzeniu .zip
-    progress = 0
-    while (progress < 100) {
-        data = await fetch(`${api_link}/download_progress`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ job_id: job_id })
-        })
-        data = await data.json()
-        progress = data['progress']
-        console.log("progress:", progress)
-        await delay(500)
-    }
+    await checkDownloadProgress(job_id);
 
     // pobranie gotowego pliku
     data = await fetch(`${api_link}/download`, {
@@ -61,7 +74,6 @@ async function download(ids) {
 async function search(e) {
     e.preventDefault();
     let anime = document.getElementById("anime").value;
-    console.log("search:", anime)
 
     data = await fetch(`${api_link}/search`, {
         method: "POST",
