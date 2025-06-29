@@ -38,15 +38,9 @@ function loadResults(data) {
     });
 }
 
-function sortby(mode){
-    element = document.getElementById("select");
-    element.innerHTML = `<select id="select_sort" onchange="sortby(this.value)">
-                    <option id='s-default' value="default">najlepsze dopasowanie</option>
-                    <option id='s-count' value="count">najwięcej odcinków</option>
-                    <option id='s-date' value="date">najnowsze</option>
-                </select>`
-    document.getElementById(`s-${mode}`).setAttribute("selected" ,"");
-    switch (mode){
+function sortby(mode) {
+    document.getElementById("select").hidden = false
+    switch (mode) {
         case "default":
             loadResults(data_global)
             break

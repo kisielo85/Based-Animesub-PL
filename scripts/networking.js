@@ -1,17 +1,15 @@
 const api_link = "https://basedanimesub.153070065.xyz"
-// const api_link = "http://localhost:8986"
+//const api_link = "http://localhost:8986"
 
 var IDsMap = new Map();
 const delay = ms => new Promise(res => setTimeout(res, ms));
-var data_global=[]
+var data_global = []
 
-async function checkDownloadProgress(id)
-{
-    
+async function checkDownloadProgress(id) {
     progress = 0
     divId = IDsMap.get(id).toString();
-    element =document.getElementsByName(divId)[0];
-    element2 =document.getElementsByName(`${divId}-m`)[0];
+    element = document.getElementsByName(divId)[0];
+    element2 = document.getElementsByName(`${divId}-m`)[0];
     element.style.opacity = '100%';
     element2.style.opacity = '100%';
     while (progress < 100) {
@@ -22,7 +20,7 @@ async function checkDownloadProgress(id)
         })
         data = await data.json()
         progress = data['progress']
-        element.style.width= `${progress}%`;
+        element.style.width = `${progress}%`;
         await delay(500)
     }
     element.style.opacity = '0%';
@@ -104,19 +102,5 @@ async function search(e) {
         else
             d['episodes_txt'] = false;
     })
-
-    try
-    {
-        value = document.getElementById("select_sort").value;
-    }
-    catch
-    {
-        value = "default";
-    }
-    finally
-    {
-        sortby(value);
-    }
-    
-
+    sortby(document.getElementById("select_sort").value)
 }

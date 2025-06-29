@@ -21,14 +21,18 @@
                 </div>
             </form>
         </div>
-        <div id="select"></div>
+        <select id="select_sort" onchange="sortby(this.value)" hidden>
+            <option id='s-default' value="default">najlepsze dopasowanie</option>
+            <option id='s-count' value="count">najwięcej odcinków</option>
+            <option id='s-date' value="date">najnowsze</option>
+        </select>
         <div id="main">
             <div id="results">
                 <div class="result">
                     <div class="name">Witaj na stronie!</div>
                     <div class="details">
                         Ten projekt powstał aby ułatwić wyszukiwanie polskich napisów do anime - wszystkie dane pobierane są ze strony <a target="_blank" href="http://animesub.info">animesub.info</a>.<br>
-                        Cały kod zawarty w projekcie jest open-source z licencją GPL-3.0, oznacza to że możesz go dowolnie modyfikować i rozpowszechniać, przy równoczesnym zastosowaniu się do jej odpowiednich warunków.<br> <a target="_blank" href="https://github.com/kisielo85/Based-Animesub-PL">[repozytorium na githubie]</a>
+                        Cały kod zawarty w projekcie jest open-source z licencją GPL-3.0, w skrócie: oznacza to że możesz go dowolnie modyfikować i rozpowszechniać, pod warunkiem zachowania tej samej licencji.<br> <a target="_blank" href="https://github.com/kisielo85/Based-Animesub-PL">[repozytorium na githubie]</a>
                     </div>
                     <div class="odcinki">-- Have fun, idk --</div>
                 </div>
