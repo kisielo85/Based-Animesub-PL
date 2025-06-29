@@ -104,5 +104,19 @@ async function search(e) {
         else
             d['episodes_txt'] = false;
     })
-    sortby(document.getElementById("select_sort").value)
+    
+    try
+    {
+        value = document.getElementById("select_sort").value;
+    }
+    catch
+    {
+        value = "default";
+    }
+    finally
+    {
+        sortby(value);
+    }
+    
+
 }
