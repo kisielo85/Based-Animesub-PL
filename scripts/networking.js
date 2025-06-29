@@ -1,5 +1,5 @@
-// const api_link = "https://basedanimesub.153070065.xyz"
-const api_link = "http://localhost:8986"
+const api_link = "https://basedanimesub.153070065.xyz"
+// const api_link = "http://localhost:8986"
 
 var IDsMap = new Map();
 const delay = ms => new Promise(res => setTimeout(res, ms));
@@ -104,7 +104,7 @@ async function search(e) {
         else
             d['episodes_txt'] = false;
     })
-    
+
     try
     {
         value = document.getElementById("select_sort").value;
