@@ -37,9 +37,8 @@ function loadResults(data) {
         });
     });
 }
-
 function sortby(mode) {
-    document.getElementById("select").hidden = false
+    document.getElementById("select_sort").style.display = ""
     switch (mode) {
         case "default":
             loadResults(data_global)

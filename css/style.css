@@ -281,6 +281,7 @@ a:active
 {
     background-color: #524a42;
     text-align: center;
+    min-width: fit-content;
     width:15vw;
     height:5vh;
     display: block;
