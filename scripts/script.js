@@ -44,10 +44,10 @@ function sortby(mode) {
             loadResults(data_global)
             break
         case "count":
-            loadResults(data_global.sort((a, b) => b.episodes.length - a.episodes.length))
+            loadResults([...data_global].sort((a, b) => b.episodes.length - a.episodes.length))
             break
         case "date":
-            loadResults(data_global.sort((a, b) => new Date(b.date) - new Date(a.date)))
+            loadResults([...data_global].sort((a, b) => new Date(b.date) - new Date(a.date)))
             break
     }
 }
