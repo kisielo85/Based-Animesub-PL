@@ -28,6 +28,7 @@ async function checkDownloadProgress(id) {
 }
 
 async function download(ids) {
+    //start=Date.now()
     // wysłanie id do pobrania, i odebranie job_id
     data = await fetch(`${api_link}/download_start`, {
         method: "POST",
@@ -67,6 +68,7 @@ async function download(ids) {
     a.download = filename;
     a.click();
     URL.revokeObjectURL(url);
+    //console.log(ids,"\ndownload time:",((Date.now()-start)/1000).toFixed(2),"s")
 }
 
 async function search(e) {

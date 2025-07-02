@@ -9,6 +9,7 @@ import zipfile
 import py7zr
 from time import sleep
 from concurrent.futures import ThreadPoolExecutor
+import time
 
 
 # zbieranie danych z html
@@ -181,35 +182,51 @@ def search(txt):
     return batches
 
 
+def download_file(id, job, files):
+    # jeśli nie uda sie pobrać, to próbuje jeszcze kilka razy
+    for i in range(5):
+        try:
+            response = requests.post(
+                "http://animesub.info/sciagnij.php", data={"id": id}
+            )
+            if response.ok:
+                break
+        finally:
+            if i >= 4:
+                job['failed'] = True
+                return
+            sleep(1)
+
+    # zapis pobranego zip
+    filename = f"{job['path']}/{id}.zip"
+    with open(filename, "wb") as f:
+        f.write(response.content)
+    files.append(
+        [filename, response.content[:2], response.headers.get("Content-Disposition")]
+    )
+    job['done'] += 4
+
+
 # pobieranie danych napisów
 def download(ids, job):
     path = "./cache/" + "_".join(str(i) for i in ids)
     os.makedirs(path + "/result", exist_ok=True)
+    job['path'] = path
+    job['done'] = 0
+    job['done_max'] = len(ids) * 5 + 1
+    job['failed'] = False
+
     output_name = ""
+    files = []
+    with ThreadPoolExecutor(max_workers=8) as executor:
+        for id in ids:
+            executor.submit(download_file, id, job, files)
 
-    tasks = len(ids) + 1
-    done = 0
-    for id in ids:
-        # jeśli nie uda sie pobrać, to próbuje jeszcze kilka razy
-        for i in range(5):
-            try:
-                response = requests.post(
-                    "http://animesub.info/sciagnij.php", data={"id": id}
-                )
-                if response.ok:
-                    break
-            finally:
-                if i >= 4:
-                    return (False, False)
-                sleep(1)
+    if job['failed']:
+        return False
 
-        # zapis pobranego zip
-        filename = f"{path}/{id}.zip"
-        with open(filename, "wb") as f:
-            f.write(response.content)
-
+    for filename, zip_mode, default_name in files:
         # rozpakowywanie
-        zip_mode = response.content[:2]
         match (zip_mode):
             case b"PK":  # zip
                 with zipfile.ZipFile(filename, "r") as archive:
@@ -221,18 +238,16 @@ def download(ids, job):
                 print("nie można wypakować pliku")
                 return (False, False)
 
-        done += 1
-        job["progress"] = int(done / tasks * 100)
+        job['done'] += 1
 
         # nazwa zipa z wynikiem
         if output_name == "":
             output_name = "plik_BasedAnimesubInfo.zip"  # fallback
 
             # domyślna nazwa pobranego pliku
-            content_disposition = response.headers.get("Content-Disposition")
-            if not content_disposition:
+            if not default_name:
                 continue
-            match = re.search(r'filename="?([^"]+)"?', content_disposition)
+            match = re.search(r'filename="?([^"]+)"?', default_name)
             if not match:
                 continue
 
@@ -253,7 +268,7 @@ def download(ids, job):
                 arcname = os.path.relpath(file_path, start=f"{path}/extracted")
                 zipf.write(file_path, arcname)
 
-    job["progress"] = 100
+    job['done'] = job['done_max']
     job["result_path"] = output_path
     job["result_name"] = output_name
 

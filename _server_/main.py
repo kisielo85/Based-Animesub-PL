@@ -81,8 +81,11 @@ class handler(BaseHTTPRequestHandler):
                 self.send_response(200)
                 self.send_header("Content-Type", "application/json")
                 self._set_headers()
+                job = current_jobs[job_id]
                 self.wfile.write(
-                    json.dumps({"progress": current_jobs[job_id]['progress']}).encode()
+                    json.dumps(
+                        {'progress': int(job['done'] / job['done_max'] * 100)}
+                    ).encode()
                 )
                 self.wfile.flush()
             case "/download":
