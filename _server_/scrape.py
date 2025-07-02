@@ -213,10 +213,10 @@ def download(ids, job):
         match (zip_mode):
             case b"PK":  # zip
                 with zipfile.ZipFile(filename, "r") as archive:
-                    archive.extractall(path)
+                    archive.extractall(f"{path}/extracted")
             case b"7z":  # 7zip
                 with py7zr.SevenZipFile(filename, mode="r") as archive:
-                    archive.extractall(path)
+                    archive.extractall(f"{path}/extracted")
             case "_":
                 print("nie można wypakować pliku")
                 return (False, False)
@@ -244,13 +244,14 @@ def download(ids, job):
     output_path = f"{path}/result/{output_name}"
     # pakowanie wszystkich napisów do jednego pliku
     with zipfile.ZipFile(output_path, "w", zipfile.ZIP_DEFLATED) as zipf:
-        for file in os.listdir(path):
-            if file.lower().endswith((".zip", ".7z")):
-                continue
+        for root, dirs, files in os.walk(f"{path}/extracted"):
+            for file in files:
+                if file.lower().endswith((".zip", ".7z")):
+                    continue
 
-            file_path = os.path.join(path, file)
-            if os.path.isfile(file_path):
-                zipf.write(file_path, file)
+                file_path = os.path.join(root, file)
+                arcname = os.path.relpath(file_path, start=f"{path}/extracted")
+                zipf.write(file_path, arcname)
 
     job["progress"] = 100
     job["result_path"] = output_path
