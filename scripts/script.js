@@ -1,6 +1,5 @@
 function loadResults(data) {
     let inside = ``;
-    console.log(data)
     if (data.length > 0) {
         data.forEach(d => {
             let divId = d.sub_ids.join("-");

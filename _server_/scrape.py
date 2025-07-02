@@ -14,7 +14,7 @@ from concurrent.futures import ThreadPoolExecutor
 # zbieranie danych z html
 def result_processing(lock, results, link, pages=False, title_mode=False):
     response = requests.get(link)
-    soup = BeautifulSoup(response.content, "html5lib")
+    soup = BeautifulSoup(response.content, "lxml")
     data_segments = soup.find_all("table", class_="Napisy")
     if len(data_segments) <= 1:
         return False
@@ -42,7 +42,10 @@ def result_processing(lock, results, link, pages=False, title_mode=False):
             "%Y-%m-%d"
         )
         description = (
-            s.find("tr", class_="KKom").find("td", class_="KNap").decode_contents()
+            s.find("tr", class_="KKom")
+            .find("td", class_="KNap")
+            .get_text(separator="\n", strip=True)
+            .replace("Autor:<br>", "Autor: ")
         )
         episodes = []
 

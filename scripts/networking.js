@@ -70,6 +70,7 @@ async function download(ids) {
 }
 
 async function search(e) {
+    //start=Date.now()
     e.preventDefault();
     let anime = document.getElementById("anime").value;
 
@@ -80,6 +81,7 @@ async function search(e) {
     })
     data = await data.json();
     data_global = data
+    //console.log(anime,"time:",((Date.now()-start)/1000).toFixed(2),"s")
 
     data.forEach(d => {
         let episodes = [];
