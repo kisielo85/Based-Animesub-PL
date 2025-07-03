@@ -1,10 +1,12 @@
 from http.server import ThreadingHTTPServer, BaseHTTPRequestHandler
-from datetime import datetime
+from datetime import datetime, timedelta
 import json
 import scrape
 import random
 import string
 import shutil
+from threading import Thread
+from time import sleep
 
 current_jobs = {}
 
@@ -60,6 +62,8 @@ class handler(BaseHTTPRequestHandler):
 
                 if existing_job:
                     job_id = existing_job
+                    if current_jobs[job_id]['time'] - datetime.now() < timedelta(minutes=5):
+                        current_jobs[job_id]['time'] += timedelta(minutes=5)
                 else:
                     # nowe zadanie, tworzenie nowego id
                     job_id = random_str(16)
@@ -77,7 +81,7 @@ class handler(BaseHTTPRequestHandler):
 
                 current_jobs[job_id] = {
                     'progress': 0,
-                    'time': datetime,
+                    'time': datetime.now() + timedelta(hours=12),
                     'result_path': '',
                     'id_str': id_str,
                 }
@@ -101,9 +105,7 @@ class handler(BaseHTTPRequestHandler):
                 self._set_headers()
                 job = current_jobs[job_id]
                 self.wfile.write(
-                    json.dumps(
-                        {'progress': int(job['done'] / job['done_max'] * 100)}
-                    ).encode()
+                    json.dumps({'progress': int(job['done'] / job['done_max'] * 100)}).encode()
                 )
                 self.wfile.flush()
 
@@ -126,9 +128,7 @@ class handler(BaseHTTPRequestHandler):
                 self.send_header('Access-Control-Expose-Headers', 'Content-Disposition')
                 self.send_header(
                     'Content-Disposition',
-                    'attachment; filename="'
-                    + current_jobs[job_id]['result_name']
-                    + '"',
+                    'attachment; filename="' + current_jobs[job_id]['result_name'] + '"',
                 )
                 self._set_headers()
                 self.wfile.write(content)
@@ -138,7 +138,25 @@ class handler(BaseHTTPRequestHandler):
         self._set_headers()
 
 
+# usuwanie starych danych
+def cache_cleaner():
+    while True:
+        # wybranie zadań z cache do usunięcia
+        to_del = []
+        for key in current_jobs:
+            if datetime.now() < current_jobs[key]['time']:
+                continue
+            to_del.append(key)
+        # usuwanie
+        for key in to_del:
+            shutil.rmtree(current_jobs[key]['path'], ignore_errors=True)
+            del current_jobs[key]
+        sleep(3600)
+
+
 if __name__ == '__main__':
-    shutil.rmtree('./cache')
+    t = Thread(target=cache_cleaner)
+    t.start()
+    shutil.rmtree('./cache', ignore_errors=True)
     server = ThreadingHTTPServer(('0.0.0.0', 8986), handler)
     server.serve_forever()

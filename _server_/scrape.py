@@ -39,9 +39,7 @@ def result_processing(lock, results, link, pages=False, title_mode=False):
         author_txt = s.find("a").get_text()[1:]
         title = s.find("td").get_text()
         title_en = s.find_all("tr")[1].find("td").get_text()
-        date = datetime.strptime(s.find_all("td")[1].get_text(), "%Y.%m.%d").strftime(
-            "%Y-%m-%d"
-        )
+        date = datetime.strptime(s.find_all("td")[1].get_text(), "%Y.%m.%d").strftime("%Y-%m-%d")
         description = (
             s.find("tr", class_="KKom")
             .find("td", class_="KNap")
@@ -89,9 +87,7 @@ def result_processing(lock, results, link, pages=False, title_mode=False):
 
     # sortowanie po id
     for key in results:
-        results[key]["sub_results"] = sorted(
-            results[key]["sub_results"], key=lambda x: x["id"]
-        )
+        results[key]["sub_results"] = sorted(results[key]["sub_results"], key=lambda x: x["id"])
 
     return True
 
@@ -120,9 +116,7 @@ def search(txt):
     links = []
     for p in pages:
         for i in range(1, pages[p]):
-            links.append(
-                f"http://animesub.info/szukaj.php?szukane={txt}&pTitle={p}&od={i}"
-            )
+            links.append(f"http://animesub.info/szukaj.php?szukane={txt}&pTitle={p}&od={i}")
 
     # przeszukanie linków
     with ThreadPoolExecutor(max_workers=8) as executor:
@@ -186,9 +180,7 @@ def download_file(id, job, files):
     # jeśli nie uda sie pobrać, to próbuje jeszcze kilka razy
     for i in range(5):
         try:
-            response = requests.post(
-                "http://animesub.info/sciagnij.php", data={"id": id}
-            )
+            response = requests.post("http://animesub.info/sciagnij.php", data={"id": id})
             if response.ok:
                 break
         finally:
@@ -201,9 +193,7 @@ def download_file(id, job, files):
     filename = f"{job['path']}/{id}.zip"
     with open(filename, "wb") as f:
         f.write(response.content)
-    files.append(
-        [filename, response.content[:2], response.headers.get("Content-Disposition")]
-    )
+    files.append([filename, response.content[:2], response.headers.get("Content-Disposition")])
     job['done'] += 4
 
 
