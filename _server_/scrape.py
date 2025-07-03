@@ -9,7 +9,7 @@ import zipfile
 import py7zr
 from time import sleep
 from concurrent.futures import ThreadPoolExecutor
-import time
+import shutil
 
 
 # zbieranie danych z html
@@ -269,8 +269,19 @@ def download(ids, job):
                 zipf.write(file_path, arcname)
 
     job['done'] = job['done_max']
-    job["result_path"] = output_path
-    job["result_name"] = output_name
+    job['result_path'] = output_path
+    job['result_name'] = output_name
+
+    # usuwanie niepotrzebnych plików
+    for item in os.listdir(path):
+        item_path = os.path.join(path, item)
+
+        if item == 'result':
+            continue
+        if os.path.isfile(item_path):
+            os.remove(item_path)
+        elif os.path.isdir(item_path):
+            shutil.rmtree(item_path)
 
 
 def start_download(ids, job):
