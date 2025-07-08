@@ -1,0 +1,92 @@
+#results {
+    margin-top: 10vh;
+}
+
+.resultDisabled {
+    font-size: 0;
+    margin: 0;
+    opacity: 0;
+    padding: 0;
+    transition: opacity .25s, font-size .5s .25s, margin .5s .25s, padding .5s .25s;
+}
+
+.result {
+    position: relative;
+    width: 80%;
+    max-width: 1000px;
+    padding: 20px;
+    margin: 0 auto 4vh auto;
+
+    overflow: hidden;
+    border-radius: 80px 30px 80px 30px;
+    border-bottom: 2px solid var(--main-hue);
+
+    transition: 0.5s all ease-in-out;
+
+    background-color: #4b4040;
+    /* hex background */
+    --s: 25px;
+    --c1: #4c4141;
+    --c2: #4b4040;
+    --c: #0000, var(--c1) .5deg 119.5deg, #0000 120deg;
+    --g1: conic-gradient(from 60deg at 56.25% calc(425%/6), var(--c));
+    --g2: conic-gradient(from 180deg at 43.75% calc(425%/6), var(--c));
+    --g3: conic-gradient(from -60deg at 50% calc(175%/12), var(--c));
+    background:
+        var(--g1), var(--g1) var(--s) calc(1.73*var(--s)),
+        var(--g2), var(--g2) var(--s) calc(1.73*var(--s)),
+        var(--g3) var(--s) 0, var(--g3) 0 calc(1.73*var(--s)) var(--c2);
+    background-size: calc(2*var(--s)) calc(3.46*var(--s));
+    /* -------------- */
+}
+
+.description {
+    --d-default: calc(100% - 35px);
+    --d-hover: calc(100% - 110px);
+    --d-open: 30px;
+    position: absolute;
+    top: 0;
+    left: var(--d-default);
+
+    height: 100%;
+    width: 100%;
+    display: inline-flex;
+
+    align-items: center;
+    transition: 0.5s all ease-in-out;
+
+    background-color: #4b4040;
+    /* hex background */
+    --s: 25px;
+    --c1: #251c1c;
+    --c2: #291f1f;
+    --c: #0000, var(--c1) .5deg 119.5deg, #0000 120deg;
+    --g1: conic-gradient(from 60deg at 56.25% calc(425%/6), var(--c));
+    --g2: conic-gradient(from 180deg at 43.75% calc(425%/6), var(--c));
+    --g3: conic-gradient(from -60deg at 50% calc(175%/12), var(--c));
+    background:
+        var(--g1), var(--g1) var(--s) calc(1.73*var(--s)),
+        var(--g2), var(--g2) var(--s) calc(1.73*var(--s)),
+        var(--g3) var(--s) 0, var(--g3) 0 calc(1.73*var(--s)) var(--c2);
+    background-size: calc(2*var(--s)) calc(3.46*var(--s));
+    /* -------------- */
+    border-radius: 50px 0px 0px 50px;
+}
+
+.description-text {
+    overflow: scroll;
+    height: 100%;
+    margin: 1vh 4vw;
+    padding: 2vh 3vw;
+    color: white;
+    width: 50%;
+}
+
+.back {
+    width: fit-content;
+    margin: 0px 10px 0px 5px;
+    transition: all 0.5s ease-in-out;
+    user-select: none;
+    color: white;
+    font-size: 40px;
+}

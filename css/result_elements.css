@@ -1,0 +1,77 @@
+.name {
+    margin: auto;
+    width: fit-content;
+    color: white;
+    font-size: 36px;
+    text-align: center;
+    font-family: Bebas Neue;
+    border-bottom: var(--main-hue) 1px dashed;
+}
+
+.subName {
+    text-align: center;
+    margin: auto;
+    font-weight: 400;
+    font-size: small;
+    color: #020202;
+}
+
+.odcinki {
+    color: var(--main-hue);
+    margin: auto;
+    text-align: center;
+    margin-top: 14px;
+
+}
+
+.down {
+    margin-top: 18px;
+    margin-bottom: 9px;
+    width: 100%;
+}
+
+.down button {
+    display: block;
+    margin: auto;
+    border: 2px solid #3f3f3f;
+    background-color: #524a42;
+    color: white;
+    font-size: medium;
+    font-family: 'Quicksand';
+    padding: 12px 46px;
+    border-radius: 9px;
+}
+
+.down button:hover {
+    cursor: pointer;
+    border-color: var(--main-hue);
+}
+
+.down button:active {
+    border-color: white;
+}
+
+.progress-bar {
+    opacity: 0%;
+    background-color: rgb(78, 90, 60);
+    height: 3px;
+    width: 90%;
+    margin: 9px auto;
+    transition: all 0.3s ease-in-out;
+}
+
+.inner-progres {
+    transition: all 0.3s ease-in-out;
+    opacity: 0%;
+    position: relative;
+    top: 0;
+    left: 0;
+    background-color: rgb(169, 240, 62);
+    height: 3px;
+    width: 0%;
+}
+
+.date {
+    margin-left: auto;
+    margin-right: 30px;
+}
