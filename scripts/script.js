@@ -1,21 +1,69 @@
+let elements = [];
+
+function switchPos(i)
+{
+    let el = document.getElementsByName("desc-"+i)[0];
+    let elArr = document.getElementsByName("back-"+i)[0];
+    if (elements[i])
+    {
+        el.style.left = "-5vw";
+        elArr.style.transform="rotate(0turn)";
+    }  
+    else
+    {
+        el.style.left = "-60vw";
+        elArr.style.transform="rotate(0.5turn)";
+    }
+        
+    elements[i] = !elements[i];
+}
+
+function response(i)
+{
+    let el = document.getElementsByName("desc-"+i)[0];
+    if (!elements[i])
+        el.style.left = "-7vw";
+}
+function responseOut(i)
+{
+    let el = document.getElementsByName("desc-"+i)[0];
+    if (!elements[i])
+        el.style.left = "-5vw";
+}
+
 function loadResults(data) {
     let inside = ``;
-    if (data.length > 0) {
-        data.forEach(d => {
+    let len = data.length;
+    if (len > 0) {
+        for (let i =0; i<len; i++)
+        {
+            let d = data[i];
             let divId = d.sub_ids.join("-");
+            let desc  = d.descriptions[0].replaceAll("\n","<br>");
+            elements.push(false);
             inside +=
-                `<div class='resultDisabled'>
-                    <div class='name'>${d.title_en}</div>
-                    <div class='subName'>${d.title}</div>
-                    <div class='odcinki'>${d.episodes_txt ? "Dostępne odcinki: " + d.episodes_txt : "Film/OVA"}</div>
-                    <div class='down'><button onclick='download([${d.sub_ids}])'>Pobierz paczkę</button></div>
-                    <div class='progress-bar' name='${divId}-m'><div name='${divId}' class='inner-progres'></div></div>
-                    <div class='bottomRow'>
-                        <div class='autor'>Autor: <a href='http://animesub.info/osoba.php?id=${d.author_id}'>${d.author}</a></div>
-                        <div class='data'>${d.date}</div>
+                `<div class='resultParent'>
+                    <div class='resultDisabled'>
+                        <div class='name'>${d.title_en}</div>
+                        <div class='subName'>${d.title}</div>
+                        <div class='odcinki'>${d.episodes_txt ? "Dostępne odcinki: " + d.episodes_txt : "Film/OVA"}</div>
+                        <div class='down'><button onclick='download([${d.sub_ids}])'>Pobierz paczkę</button></div>
+                        <div class='progress-bar' name='${divId}-m'><div name='${divId}' class='inner-progres'></div></div>
+                        <div class='bottomRow'>
+                            <div class='autor'>Autor: <a href='http://animesub.info/osoba.php?id=${d.author_id}'>${d.author}</a></div>
+                            <div class='data'>${d.date}</div>
+                        </div>
+                    </div>
+                    <div class='description' onClick='switchPos(${i})' onmouseover='response(${i})' onmouseout='responseOut(${i})' name='desc-${i}'>
+                        <div class='back' name='back-${i}'><</div>
+                        <div>
+                            <div class='name'>Opis</div>
+                        </div>
+                        <div class='description-text'">${desc}</div>
+
                     </div>
                 </div>`
-        })
+        }
     } else {
         inside +=
             `<div class='resultDisabled'>
