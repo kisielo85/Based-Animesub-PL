@@ -2,8 +2,9 @@ let elements = [];
 
 // otwieranie i zamykanie karty z opisem
 function switchPos(i) {
-    let el = document.getElementsByName("desc-" + i)[0];
-    let arrow = document.getElementsByName("back-" + i)[0];
+    console.log("EL", elements)
+    let el = document.getElementById("desc-" + i);
+    let arrow = document.getElementById("arrow-" + i);
     if (elements[i]) {
         el.style.left = "var(--d-default)";
         arrow.style.transform = "rotate(0turn)";
@@ -18,7 +19,7 @@ function switchPos(i) {
 
 // smol animacja po najechaniu na karte z opisem
 function mouse_hover(i, mouse_in) {
-    let el = document.getElementsByName("desc-" + i)[0]
+    let el = document.getElementById("desc-" + i)
     if (elements[i]) return
 
     el.style.left = (mouse_in) ? "var(--d-hover)" : "var(--d-default)"
@@ -27,29 +28,34 @@ function mouse_hover(i, mouse_in) {
 function loadResults(data) {
     let inside = ``;
     let len = data.length;
+    elements = Array(len).fill(false);
     if (len > 0) {
         for (let i = 0; i < len; i++) {
             let d = data[i];
             let divId = d.sub_ids.join("-");
-            let desc = d.descriptions[0].replaceAll("\n", "<br>");
-            elements.push(false);
+            let desc = d.descriptions[0]
             inside +=
                 `<div class='resultDisabled'>
                     <div class='name'>${d.title_en}</div>
                     <div class='subName'>${d.title}</div>
                     <div class='odcinki'>${d.episodes_txt ? "Dostępne odcinki: " + d.episodes_txt : "Film/OVA"}</div>
                     <div class='down'><button onclick='download([${d.sub_ids}])'>Pobierz paczkę</button></div>
-                    <div class='progress-bar' name='${divId}-m'><div name='${divId}' class='inner-progres'></div></div>
+                    <div class='progress-bar' id='${divId}-m'><div id='${divId}' class='inner-progres'></div></div>
                     <div style='display: flex;'>
                         <div>Autor: <a href='http://animesub.info/osoba.php?id=${d.author_id}'>${d.author}</a></div>
                         <div class='date'>${d.date}</div>
                     </div>
-                    <div class='description' onClick='switchPos(${i})' onmouseover='mouse_hover(${i},true)' onmouseout='mouse_hover(${i},false)' name='desc-${i}'>
-                        <div class='back' name='back-${i}'><</div>
-                        <div>
+                    <div class='description' id='desc-${i}'>
+                        <div class='arrow-parent' onClick='switchPos(${i})' onmouseover='mouse_hover(${i},true)' onmouseout='mouse_hover(${i},false)'>
+                            <div class='arrow' id='arrow-${i}'><</div>
                             <div class='name'>Opis</div>
                         </div>
-                        <div class='description-text'">${desc}</div>
+                        <div class='pages'>
+                            <div id='page-num-${i}'>1/${d.descriptions.length}</div>
+                            <button onclick='load_desc(${i}, -1)' style='margin-right: 4px'><</button>
+                            <button onclick='load_desc(${i}, 1)'>></button>
+                        </div>
+                        <div class='description-text' id='desc-txt-${i}' value='0'>${desc}</div>
                     </div>
                 </div>`
         }
@@ -74,17 +80,35 @@ function loadResults(data) {
     });
 }
 
+// wczytywanie opisów danych plików
+function load_desc(id, val) {
+    len = sorted_data_global[id].descriptions.length
+    desc_element = document.getElementById('desc-txt-' + id)
+    page = parseInt(desc_element.getAttribute('value')) + val
+
+    if (page >= len) page = 0
+    else if (page < 0) page = len - 1
+
+    desc_element.setAttribute('value', page)
+    document.getElementById('page-num-' + id).innerText = `${page + 1}/${len}`
+
+    desc_element.innerHTML = sorted_data_global[id].descriptions[page]
+}
+
+var sorted_data_global = []
+
 function sortby(mode) {
     document.getElementById("select_sort").style.display = ""
     switch (mode) {
         case "default":
-            loadResults(data_global)
+            sorted_data_global = data_global
             break
         case "count":
-            loadResults([...data_global].sort((a, b) => b.episodes.length - a.episodes.length))
+            sorted_data_global = [...data_global].sort((a, b) => b.episodes.length - a.episodes.length)
             break
         case "date":
-            loadResults([...data_global].sort((a, b) => new Date(b.date) - new Date(a.date)))
+            sorted_data_global = [...data_global].sort((a, b) => new Date(b.date) - new Date(a.date))
             break
     }
+    loadResults(sorted_data_global)
 }

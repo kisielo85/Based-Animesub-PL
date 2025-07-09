@@ -1,0 +1,103 @@
+.description {
+    --d-default: calc(100% - 40px);
+    --d-hover: calc(100% - 100px);
+    --d-open: 30px;
+    position: absolute;
+    top: 0;
+    left: var(--d-default);
+
+    height: 100%;
+    width: calc(100% - var(--d-open));
+    display: grid;
+    grid-template-columns: 1fr 1fr 3.5fr;
+    grid-template-areas: "arr btn txt";
+
+    align-items: center;
+    transition: 0.5s all ease-in-out;
+
+    background-color: #4b4040;
+    /* hex background */
+    --s: 25px;
+    --c1: #251c1c;
+    --c2: #291f1f;
+    --c: #0000, var(--c1) .5deg 119.5deg, #0000 120deg;
+    --g1: conic-gradient(from 60deg at 56.25% calc(425%/6), var(--c));
+    --g2: conic-gradient(from 180deg at 43.75% calc(425%/6), var(--c));
+    --g3: conic-gradient(from -60deg at 50% calc(175%/12), var(--c));
+    background:
+        var(--g1), var(--g1) var(--s) calc(1.73*var(--s)),
+        var(--g2), var(--g2) var(--s) calc(1.73*var(--s)),
+        var(--g3) var(--s) 0, var(--g3) 0 calc(1.73*var(--s)) var(--c2);
+    background-size: calc(2*var(--s)) calc(3.46*var(--s));
+    /* -------------- */
+    border-radius: 50px 0px 0px 50px;
+}
+
+.description-text {
+    grid-area: txt;
+    overflow: auto;
+    height: 100%;
+    color: white;
+    width: 100%;
+}
+
+@media (max-aspect-ratio: 2/3) {
+    .description {
+        --d-open: 10px;
+        grid-template-columns: 1fr 1fr 2fr;
+        gap: 0px;
+        column-gap: 0;
+        grid-template-areas:
+            "arr btn ."
+            "txt txt txt";
+    }
+
+    .description-text {
+        padding-left: 40px;
+        width: calc(100% - 40px);
+    }
+}
+
+.arrow-parent {
+    grid-area: arr;
+    align-items: center;
+    display: flex;
+    height: 100%;
+    padding: 10px;
+    font-size: 40px;
+    cursor: pointer;
+}
+
+.arrow-parent div {
+    margin: 5px;
+}
+
+.arrow {
+    width: fit-content;
+    transition: all 0.5s ease-in-out;
+    user-select: none;
+    color: white;
+}
+
+.pages {
+    grid-area: btn;
+    width: 100%;
+    width: 80px;
+}
+
+.pages div {
+    text-align: center;
+}
+
+.pages button {
+    cursor: pointer;
+    margin: none;
+    width: calc(50% - 2px);
+    height: 25px;
+    border: 2px solid #3f3f3f;
+    background-color: #524a42;
+    color: white;
+    font-family: 'Quicksand';
+    border-radius: 5px;
+    float: left;
+}

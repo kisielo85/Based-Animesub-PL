@@ -43,7 +43,7 @@ def result_processing(lock, results, link, pages=False, title_mode=False):
         description = (
             s.find("tr", class_="KKom")
             .find("td", class_="KNap")
-            .get_text(separator="\n", strip=True)
+            .get_text(separator="<br>", strip=True)
             .replace("Autor:<br>", "Autor: ")
         )
         episodes = []

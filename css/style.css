@@ -13,6 +13,9 @@ html {
 }
 
 body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
     color: #c4c4c4;
     margin: 0;
     font-family: 'Quicksand', sans-serif;
@@ -95,8 +98,6 @@ body {
     outline: 0;
 }
 
-
-
 a {
     text-decoration: none;
 }
@@ -111,20 +112,10 @@ a:visited {
 
 a:hover {
     color: rgb(241, 188, 95);
-    ;
 }
 
 a:active {
     color: rgb(255, 255, 255);
-}
-
-.main {
-    display: flex;
-    --s: 100px;
-    /* size  */
-    --m: 4px;
-    /* margin */
-    --f: calc(var(--s) * 1.732 + 4 * var(--m) - 1px);
 }
 
 .details {
@@ -134,14 +125,12 @@ a:active {
 }
 
 #footer {
-    width: 100vw;
-    position: fixed;
-    bottom: 0;
     background-color: rgb(14, 14, 14);
     padding: 1vh 0;
     text-align: center;
     color: white;
-    border-top: 1px dashed rgb(48, 48, 48)
+    border-top: 1px dashed rgb(48, 48, 48);
+    margin-top: auto;
 }
 
 #select_sort {

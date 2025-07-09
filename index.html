@@ -1,48 +1,44 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="css/result_cards.css">
-    <link rel="stylesheet" href="css/result_elements.css">
+    <link rel="stylesheet" href="css/result_card.css">
+    <link rel="stylesheet" href="css/description_card.css">
     <link rel="stylesheet" href="css/fontello.css">
     <link href="./font/local_google_fonts/css2_googlefont_1.css" rel="stylesheet">
     <link href="./font/local_google_fonts/css2_googlefont_2.css" rel="stylesheet">
     <title>BasedAnimesub</title>
 </head>
 <body>
-    <div id="container">
-        <div id="head">
-            <div id='headPart1'>BASED</div>
-            <div id='headPart2'>AnimeSub</div>
-            <form>
-                <div id='searchbar'>
-                    <input id="anime" placeholder="np. steins gate" type="search">
-                    <button type="submit" onclick="search(event)"><i class='icon-search'></i></button>
-                </div>
-            </form>
-        </div>
-        <select id="select_sort" onchange="sortby(this.value)" style="display: none;">
-            <option id='s-default' value="default">najlepsze dopasowanie</option>
-            <option id='s-count' value="count">najwięcej odcinków</option>
-            <option id='s-date' value="date">najnowsze</option>
-        </select>
-        <div id="main">
-            <div id="results">
-                <div class="result">
-                    <div class="name">Witaj na stronie!</div>
-                    <div class="details">
-                        Ten projekt powstał aby ułatwić wyszukiwanie polskich napisów do anime - wszystkie dane pobierane są ze strony <a target="_blank" href="http://animesub.info">animesub.info</a>.<br>
-                        Cały kod zawarty w projekcie jest open-source z licencją GPL-3.0, w skrócie: oznacza to że możesz go dowolnie modyfikować i rozpowszechniać, pod warunkiem zachowania tej samej licencji.<br> <a target="_blank" href="https://github.com/kisielo85/Based-Animesub-PL">[repozytorium na githubie]</a>
-                    </div>
-                    <div class="odcinki">-- Have fun, idk --</div>
-                </div>
+    <div id="head">
+        <div id='headPart1'>BASED</div>
+        <div id='headPart2'>AnimeSub</div>
+        <form>
+            <div id='searchbar'>
+                <input id="anime" placeholder="np. steins gate" type="search">
+                <button type="submit" onclick="search(event)"><i class='icon-search'></i></button>
             </div>
+        </form>
+    </div>
+    <select id="select_sort" onchange="sortby(this.value)" style="display: none;">
+        <option value="default">najlepsze dopasowanie</option>
+        <option value="count">najwięcej odcinków</option>
+        <option value="date">najnowsze</option>
+    </select>
+    <div id="results">
+        <div class="result">
+            <div class="name">Witaj na stronie!</div>
+            <div class="details">
+                Ten projekt powstał aby ułatwić wyszukiwanie polskich napisów do anime - wszystkie dane pobierane są ze strony <a target="_blank" href="http://animesub.info">animesub.info</a>.<br>
+                Cały kod zawarty w projekcie jest open-source z licencją GPL-3.0, w skrócie: oznacza to że możesz go dowolnie modyfikować i rozpowszechniać, pod warunkiem zachowania tej samej licencji.<br> <a target="_blank" href="https://github.com/kisielo85/Based-Animesub-PL">[repozytorium na githubie]</a>
+            </div>
+            <div class="odcinki">-- Have fun, idk --</div>
         </div>
-        <div id="footer">Made by <a target="_blank" href="https://kisielo85.github.io/">kisielo85</a> && <a target="_blank" href="https://github.com/Kamilek7">Kamilek7</a> - source: <a target="_blank" href="http://animesub.info">Animesub.info</a></div>
     </div>
 
+    <div id="footer">Made by <a target="_blank" href="https://kisielo85.github.io/">kisielo85</a> && <a target="_blank" href="https://github.com/Kamilek7">Kamilek7</a> - source: <a target="_blank" href="http://animesub.info">Animesub.info</a></div>
     
     <script src="scripts/networking.js"></script>
     <script src="scripts/script.js"></script>

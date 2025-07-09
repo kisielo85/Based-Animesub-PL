@@ -8,8 +8,8 @@ var data_global = []
 async function checkDownloadProgress(id) {
     progress = 0
     divId = IDsMap.get(id).toString();
-    element = document.getElementsByName(divId)[0];
-    element2 = document.getElementsByName(`${divId}-m`)[0];
+    element = document.getElementById(divId);
+    element2 = document.getElementById(`${divId}-m`);
     element.style.opacity = '100%';
     element2.style.opacity = '100%';
     while (progress < 100) {
