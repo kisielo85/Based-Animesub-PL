@@ -2,7 +2,6 @@ let elements = [];
 
 // otwieranie i zamykanie karty z opisem
 function switchPos(i) {
-    console.log("EL", elements)
     let el = document.getElementById("desc-" + i);
     let arrow = document.getElementById("arrow-" + i);
     if (elements[i]) {

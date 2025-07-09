@@ -87,7 +87,7 @@ def result_processing(lock, results, link, pages=False, title_mode=False):
 
     # sortowanie po id
     for key in results:
-        results[key]["sub_results"] = sorted(results[key]["sub_results"], key=lambda x: x["id"])
+        results[key]["sub_results"] = sorted(results[key]["sub_results"], key=lambda x: int(x["id"]))
 
     return True
 
@@ -134,7 +134,6 @@ def search(txt):
 
     for key in results:
         r = results[key]
-        r["sub_results"] = sorted(r["sub_results"], key=lambda x: x["date"])
 
         batch = {
             "episodes": [],
