@@ -71,9 +71,13 @@ async function download(ids) {
     //console.log(ids,"\ndownload time:",((Date.now()-start)/1000).toFixed(2),"s")
 }
 
+let is_searching = false
+
 async function search(e) {
     //start=Date.now()
     e.preventDefault();
+    if (is_searching) return
+    is_searching = true
     let results = document.getElementById('results')
     let anime = document.getElementById("anime").value
     results.innerHTML = `<h2>Wyszukiwanie "${anime}"...</h2>` + results.innerHTML
@@ -94,9 +98,11 @@ async function search(e) {
                 <div class='details'>Nie można połączyć z serwerem :(<br>spróbuj ponownie później</div>
             </div>`
         enable_results()
+        is_searching = false
         return
     }
     data_global = data
+    is_searching = false
     //console.log(anime,"time:",((Date.now()-start)/1000).toFixed(2),"s")
 
     data.forEach(d => {
