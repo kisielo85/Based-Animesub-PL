@@ -74,14 +74,28 @@ async function download(ids) {
 async function search(e) {
     //start=Date.now()
     e.preventDefault();
-    let anime = document.getElementById("anime").value;
+    let results = document.getElementById('results')
+    let anime = document.getElementById("anime").value
+    results.innerHTML = `<h2>Wyszukiwanie "${anime}"...</h2>` + results.innerHTML
 
-    data = await fetch(`${api_link}/search`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ title: (anime.toString()) })
-    })
-    data = await data.json();
+
+    try{
+        data = await fetch(`${api_link}/search`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ title: (anime.toString()) })
+        })
+        data = await data.json();
+    }
+    catch {
+        results.innerHTML = `
+            <div class='resultDisabled'>
+                <div class='name'>API nie odpowiada</div>
+                <div class='details'>Nie można połączyć z serwerem :(<br>spróbuj ponownie później</div>
+            </div>`
+        enable_results()
+        return
+    }
     data_global = data
     //console.log(anime,"time:",((Date.now()-start)/1000).toFixed(2),"s")
 

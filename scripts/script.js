@@ -68,6 +68,11 @@ function loadResults(data) {
 
     // wczytanie do html
     document.getElementById('results').innerHTML = inside;
+    enable_results()
+}
+
+// włącza animacje pojawiających sie wyników
+function enable_results(){
     requestAnimationFrame(() => {
         requestAnimationFrame(() => {
             let elements = document.querySelectorAll(".resultDisabled");
